@@ -1,22 +1,9 @@
 import org.gradle.internal.os.OperatingSystem
 
-plugins {
-    id 'java-library'
-    id 'maven-publish'
-}
+// Shared setup for every LightLib library (lightlogger, lightsim).
+// Bump a library's version in its own build.gradle, and in its vendordep JSON, for every release.
 
-// Bump this (and the versions in LightLogger.json) for every release.
-group = 'io.github.jamesehart.lightlogger'
-version = '2026.1.0'
-
-def wpilibVersion = '2026.2.1'
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    withSourcesJar()
-    withJavadocJar()
-}
+ext.wpilibVersion = '2026.2.1'
 
 // The local WPILib install's maven folder, so builds work offline.
 def frcHomeMaven
@@ -26,38 +13,45 @@ if (OperatingSystem.current().isWindows()) {
     frcHomeMaven = new File(System.getProperty('user.home'), 'wpilib/2026/maven')
 }
 
-repositories {
-    maven { url = frcHomeMaven }
-    maven { url = 'https://frcmaven.wpi.edu/artifactory/release/' }
-    mavenCentral()
-}
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
 
-// compileOnly: the robot project already provides WPILib at runtime, so the
-// published jar must not bundle or pin its own copy.
-dependencies {
-    compileOnly "edu.wpi.first.wpilibj:wpilibj-java:$wpilibVersion"
-    compileOnly "edu.wpi.first.ntcore:ntcore-java:$wpilibVersion"
-    compileOnly "edu.wpi.first.wpimath:wpimath-java:$wpilibVersion"
-    compileOnly "edu.wpi.first.wpiutil:wpiutil-java:$wpilibVersion"
-    compileOnly "edu.wpi.first.wpiunits:wpiunits-java:$wpilibVersion"
-}
-
-javadoc {
-    options.addStringOption('Xdoclint:all,-missing', '-quiet')
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = 'lightlogger-java'
-            from components.java
-        }
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        withSourcesJar()
+        withJavadocJar()
     }
+
     repositories {
-        // Published into the repo itself; GitHub serves it as the vendordep's maven URL.
-        maven {
-            name = 'repo'
-            url = layout.projectDirectory.dir('repos')
+        maven { url = frcHomeMaven }
+        maven { url = 'https://frcmaven.wpi.edu/artifactory/release/' }
+        mavenCentral()
+    }
+
+    // compileOnly: the robot project already provides WPILib at runtime, so the
+    // published jars must not bundle or pin their own copy.
+    dependencies {
+        compileOnly "edu.wpi.first.wpilibj:wpilibj-java:$wpilibVersion"
+        compileOnly "edu.wpi.first.ntcore:ntcore-java:$wpilibVersion"
+        compileOnly "edu.wpi.first.wpimath:wpimath-java:$wpilibVersion"
+        compileOnly "edu.wpi.first.wpiutil:wpiutil-java:$wpilibVersion"
+        compileOnly "edu.wpi.first.wpiunits:wpiunits-java:$wpilibVersion"
+        compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.19.2'
+    }
+
+    javadoc {
+        options.addStringOption('Xdoclint:all,-missing', '-quiet')
+    }
+
+    publishing {
+        repositories {
+            // Published into the repo itself; GitHub serves it as the vendordeps' maven URL.
+            maven {
+                name = 'repo'
+                url = rootProject.layout.projectDirectory.dir('repos')
+            }
         }
     }
 }

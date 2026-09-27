@@ -1,1 +1,3 @@
-rootProject.name = 'lightlogger'
+rootProject.name = 'lightlib'
+
+include 'lightlogger', 'lightsim'

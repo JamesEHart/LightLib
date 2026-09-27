@@ -1,0 +1,12 @@
+// Bump this (and the versions in LightLogger.json) for every release.
+group = 'io.github.jamesehart.lightlogger'
+version = '2026.1.0'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'lightlogger-java'
+            from components.java
+        }
+    }
+}

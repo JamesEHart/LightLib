@@ -1,0 +1,109 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.jamesehart.lightsim",
+    "module": "lightsim-java",
+    "version": "2026.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.11"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "lightsim-java-2026.1.0.jar",
+          "url": "lightsim-java-2026.1.0.jar",
+          "size": 31959,
+          "sha512": "20e0c08377a59a83497890c8071685f63ba5fa611f4a672391c10ec32b4c697275a8c08a0e82e1451ced3a8e374e58f48ff15de4dc0a813ee2959c3d99a0ba01",
+          "sha256": "77b5a31976b377b4369bb8dde72dd645fa57c7feffcfe09ae402ce534c37fe9a",
+          "sha1": "557dbbbcc4bc42c30138ab477281166673169ffd",
+          "md5": "059ae19377e7b24dfb936eafa982aedb"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.dyn4j",
+          "module": "dyn4j",
+          "version": {
+            "requires": "5.0.2"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "lightsim-java-2026.1.0.jar",
+          "url": "lightsim-java-2026.1.0.jar",
+          "size": 31959,
+          "sha512": "20e0c08377a59a83497890c8071685f63ba5fa611f4a672391c10ec32b4c697275a8c08a0e82e1451ced3a8e374e58f48ff15de4dc0a813ee2959c3d99a0ba01",
+          "sha256": "77b5a31976b377b4369bb8dde72dd645fa57c7feffcfe09ae402ce534c37fe9a",
+          "sha1": "557dbbbcc4bc42c30138ab477281166673169ffd",
+          "md5": "059ae19377e7b24dfb936eafa982aedb"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "lightsim-java-2026.1.0-sources.jar",
+          "url": "lightsim-java-2026.1.0-sources.jar",
+          "size": 22372,
+          "sha512": "94be5ac8d011ce262511f5e0d3314539b07282a6a7b86e9761bd4d07afc58172b91c1a677f04ccac736c978183091b8db2ccd80037bd275118d1a826e07f8265",
+          "sha256": "69e55984899877216a8f8f1fdb1a8b4aa6bebbac5008bd2acd382d4d8a227c44",
+          "sha1": "e721b4d2410fe7874b04da665eeee57d1557de5e",
+          "md5": "359c3c551da0948df932546a5ea1d849"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "lightsim-java-2026.1.0-javadoc.jar",
+          "url": "lightsim-java-2026.1.0-javadoc.jar",
+          "size": 144845,
+          "sha512": "39aa5ec0311520f9aecdfdb28d4f40c7dfe5ca2f5d622a31154fd9fed7864819315fe2450949ef5556d42caddd14853dbed26fbb22d4ad79deedd5689bac9764",
+          "sha256": "b57ac2eb40c7601713f7206f62b3892e7a41748bcf971de5ca47c0b4ad26ab18",
+          "sha1": "b6228680a9f55bcd1f5c44a25d5dafc2db11bb5d",
+          "md5": "12ff56819a3d878174b827d0ff9b58f7"
+        }
+      ]
+    }
+  ]
+}

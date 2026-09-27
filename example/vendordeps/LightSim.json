@@ -1,0 +1,26 @@
+{
+  "fileName": "LightSim.json",
+  "name": "LightSim",
+  "version": "2026.1.0",
+  "frcYear": "2026",
+  "uuid": "59ac01b9-65a9-41f4-b3a1-4c99ba190763",
+  "mavenUrls": [
+    "https://raw.githubusercontent.com/JamesEHart/LightLib/main/repos",
+    "https://repo1.maven.org/maven2"
+  ],
+  "jsonUrl": "https://raw.githubusercontent.com/JamesEHart/LightLib/main/LightSim.json",
+  "javaDependencies": [
+    {
+      "groupId": "io.github.jamesehart.lightsim",
+      "artifactId": "lightsim-java",
+      "version": "2026.1.0"
+    },
+    {
+      "groupId": "org.dyn4j",
+      "artifactId": "dyn4j",
+      "version": "5.0.2"
+    }
+  ],
+  "jniDependencies": [],
+  "cppDependencies": []
+}

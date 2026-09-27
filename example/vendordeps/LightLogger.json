@@ -5,9 +5,9 @@
   "frcYear": "2026",
   "uuid": "61cd8687-427e-4445-acdf-04ed311d74f7",
   "mavenUrls": [
-    "https://raw.githubusercontent.com/JamesEHart/LightLogger/main/repos"
+    "https://raw.githubusercontent.com/JamesEHart/LightLib/main/repos"
   ],
-  "jsonUrl": "https://raw.githubusercontent.com/JamesEHart/LightLogger/main/LightLogger.json",
+  "jsonUrl": "https://raw.githubusercontent.com/JamesEHart/LightLib/main/LightLogger.json",
   "javaDependencies": [
     {
       "groupId": "io.github.jamesehart.lightlogger",

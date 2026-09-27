@@ -1,0 +1,49 @@
+// Bump this (and the versions in LightSim.json) for every release.
+group = 'io.github.jamesehart.lightsim'
+version = '2026.1.0'
+
+def phoenix6Version = '26.3.0'
+def phoenix5Version = '5.36.0'
+def revlibVersion = '2026.0.5'
+def dyn4jVersion = '5.0.2'
+
+repositories {
+    maven { url = 'https://maven.ctr-electronics.com/release/' }
+    maven { url = 'https://maven.revrobotics.com/' }
+}
+
+dependencies {
+    // Vendor libraries are compileOnly and optional: a team only needs the ones for the
+    // Sim* classes it actually uses. LightSim's core never touches vendor classes.
+    compileOnly "com.ctre.phoenix6:wpiapi-java:$phoenix6Version"
+    compileOnly "com.ctre.phoenix:api-java:$phoenix5Version"
+    compileOnly "com.ctre.phoenix:wpiapi-java:$phoenix5Version"
+    compileOnly "com.revrobotics.frc:REVLib-java:$revlibVersion"
+    compileOnly "edu.wpi.first.hal:hal-java:$wpilibVersion"
+    compileOnly "edu.wpi.first.apriltag:apriltag-java:$wpilibVersion"
+
+    // Listed in LightSim.json too, so GradleRIO downloads it for teams.
+    implementation "org.dyn4j:dyn4j:$dyn4jVersion"
+
+    // The physics core is pure Java, so it's testable without WPILib's native libraries.
+    testImplementation "edu.wpi.first.wpimath:wpimath-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.wpiutil:wpiutil-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.wpiunits:wpiunits-java:$wpilibVersion"
+    testImplementation 'org.ejml:ejml-simple:0.44.0'
+    testImplementation 'us.hebi.quickbuf:quickbuf-runtime:1.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'lightsim-java'
+            from components.java
+        }
+    }
+}
