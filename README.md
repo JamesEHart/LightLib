@@ -11,6 +11,7 @@ LightLogger is a lightweight logging library designed for FRC teams. It provides
 - Log numbers, booleans, strings, events, warnings, errors, and geometry types
 - Simple setup with one line in `Robot.java`
 - Optional file logging to `.wpilog` files
+- Live tuning: change numbers, booleans, and strings from a dashboard while the robot runs
 - Frame timing utilities for loop performance tracking
 - Compatible with NetworkTables dashboards (Glass, AdvantageScope, Elastic, etc.)
 
@@ -120,6 +121,52 @@ Geometry types are published as WPILib structs, making them compatible with Adva
 LightLogger.logPose2d("Drive/EstimatedPose", poseEstimator.getEstimatedPosition());
 LightLogger.logRotation2d("Drive/Heading", gyro.getRotation2d());
 ```
+
+---
+
+### Live Tuning
+
+Tunable values show up on your dashboard under `/LightLogger/<key>` like any other value, but you can also **edit** them while the robot is running, and the robot code uses the new value right away. Great for tuning PID gains, setpoints, and speeds without redeploying.
+
+There are two ways to use them.
+
+**1. Read the value every loop.** Call it in a periodic method and it returns the current value:
+
+| Method | Description |
+|---|---|
+| `LightLogger.tunableNumber(String key, double defaultValue)` | Returns the current number. |
+| `LightLogger.tunableBoolean(String key, boolean defaultValue)` | Returns the current boolean. |
+| `LightLogger.tunableString(String key, String defaultValue)` | Returns the current string. |
+
+```java
+double speed = LightLogger.tunableNumber("Intake/Speed", 0.8);
+intakeMotor.set(speed);
+```
+
+**2. Register once with a callback.** Call it once (e.g. in a constructor). The callback runs immediately with the starting value, then again every time the value is edited:
+
+| Method | Description |
+|---|---|
+| `LightLogger.tunableNumber(String key, double defaultValue, Consumer<Double> onChange)` | Calls `onChange` when the number changes. |
+| `LightLogger.tunableBoolean(String key, boolean defaultValue, Consumer<Boolean> onChange)` | Calls `onChange` when the boolean changes. |
+| `LightLogger.tunableString(String key, String defaultValue, Consumer<String> onChange)` | Calls `onChange` when the string changes. |
+
+```java
+LightLogger.tunableNumber("Drive/kP", 0.1, pid::setP);
+LightLogger.tunableNumber("Drive/kD", 0.0, pid::setD);
+```
+
+> Callbacks are checked in `LightLogger.startFrame()`, so you must call it at the top of `robotPeriodic()` for them to fire.
+
+**Editing values from a dashboard:**
+- **Glass:** open the NetworkTables view, find the value under `LightLogger`, and click it to edit.
+- **AdvantageScope:** while connected live, turn on **Tuning Mode** (button at the top of the sidebar), then click a value in the sidebar to edit it.
+- **Elastic:** add the value as a widget (e.g. Text Display or Toggle Switch) and edit it there.
+
+**Things to know:**
+- Edits are **not saved**. When robot code restarts, everything goes back to the defaults in your code, so copy tuned values back into your code when you're done.
+- Don't use `logNumber` / `logBoolean` / `logString` with the same key as a tunable value, or the logged value will overwrite your edits.
+- Edits are recorded in the `.wpilog` file along with everything else, so you can see what was changed and when.
 
 ---
 

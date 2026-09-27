@@ -27,11 +27,11 @@
         {
           "name": "lightlogger-java-2026.1.0.jar",
           "url": "lightlogger-java-2026.1.0.jar",
-          "size": 4103,
-          "sha512": "354d3093a58f304ce9ea607aa344b5c87cc38fa0eae8b1536818c80c5f9f92927e7f6359269e229386698362bcba5081fdc7f018b36dd6d429a3c177871b6329",
-          "sha256": "6891e76150ae346f8e43b1bd4e9d580daa5f3b03c2cc7f3f18f376587dd5fbaa",
-          "sha1": "4cba7014bfd0672cd56674c391d23990637ab227",
-          "md5": "b3b78efa83091b2d2423234caea9f8c3"
+          "size": 6781,
+          "sha512": "0ba6c73cf0495a1dba94ca9b7c79fa4add039156d3a63c94e91bdef4f5780a884594259614053053249bea8432226c586d65a40b597acec43e49d2a43f368349",
+          "sha256": "cc266a04e3ddb9b7551db7b4180504258a9426e10a386f1fb796b82d3e9d5272",
+          "sha1": "f2438cb5baf9b471debec689fd743f18ab947b3b",
+          "md5": "169b27e0a86beb80fed7d24d6d70a907"
         }
       ]
     },
@@ -48,11 +48,11 @@
         {
           "name": "lightlogger-java-2026.1.0.jar",
           "url": "lightlogger-java-2026.1.0.jar",
-          "size": 4103,
-          "sha512": "354d3093a58f304ce9ea607aa344b5c87cc38fa0eae8b1536818c80c5f9f92927e7f6359269e229386698362bcba5081fdc7f018b36dd6d429a3c177871b6329",
-          "sha256": "6891e76150ae346f8e43b1bd4e9d580daa5f3b03c2cc7f3f18f376587dd5fbaa",
-          "sha1": "4cba7014bfd0672cd56674c391d23990637ab227",
-          "md5": "b3b78efa83091b2d2423234caea9f8c3"
+          "size": 6781,
+          "sha512": "0ba6c73cf0495a1dba94ca9b7c79fa4add039156d3a63c94e91bdef4f5780a884594259614053053249bea8432226c586d65a40b597acec43e49d2a43f368349",
+          "sha256": "cc266a04e3ddb9b7551db7b4180504258a9426e10a386f1fb796b82d3e9d5272",
+          "sha1": "f2438cb5baf9b471debec689fd743f18ab947b3b",
+          "md5": "169b27e0a86beb80fed7d24d6d70a907"
         }
       ]
     },
@@ -68,11 +68,11 @@
         {
           "name": "lightlogger-java-2026.1.0-sources.jar",
           "url": "lightlogger-java-2026.1.0-sources.jar",
-          "size": 2650,
-          "sha512": "8073662ef19fecdbcc53ead40deed1ea60df4418ec41110e639747389b0552b1b5765e9700c5accc9eb4aae4626fe1687b30722ef2138e125b6519c377bfc9bc",
-          "sha256": "093f8d8e821a991a8756fe8f1d59ba6a115dc343620c85b9ddc949c3cc86ee5b",
-          "sha1": "82b6a11f21d324386e7c293d8559a2eaaf792aca",
-          "md5": "f5d55d0eb90d82acdcaf4f647b366fce"
+          "size": 3606,
+          "sha512": "59469347e2665293e792828bcefe90a99f2cd94ec1647844559ab4dfd516f049a86d03d93bfc02bc2826ea4c0ae1502e7217a03b39429dd318651046c0a17018",
+          "sha256": "f2cbdc93b9f6b7b1fc8cb4a16541068219092f4cda46ab0240387f39230833fb",
+          "sha1": "d9c85287f826ae75c9c5a727820c86251211e778",
+          "md5": "8b76ba9716773228c1a2265c2f8201be"
         }
       ]
     },
@@ -88,11 +88,11 @@
         {
           "name": "lightlogger-java-2026.1.0-javadoc.jar",
           "url": "lightlogger-java-2026.1.0-javadoc.jar",
-          "size": 73931,
-          "sha512": "0efbd28410e29480f07e8312f1498a42600f7a17f47353c0e4ac332f0e4982d3a7586ae425280eb0043366b02498206eb6ba1f579dbf1b25b9bf724b64fbcd5e",
-          "sha256": "23546d50aa5f85f4526304e154242e373bc5a21b4d428963f58fa79a14a9d762",
-          "sha1": "5ae49d94071d356122e0230a0c366094245c84cf",
-          "md5": "0152e3197815646e997f83318b35627f"
+          "size": 75095,
+          "sha512": "27d598b63aa204d33b8e1c93cb28bed01a7b80cab65e4be5be23c6e739f0e7c57cab36510ca5077b9fda6fe6f0acc28f86a8d51617e1c7e22ab386c867f62a65",
+          "sha256": "dcc767a3e03c165df77869cc90f890a44428034ed8affb3ce8b53464318eaae6",
+          "sha1": "4a02ba79dc05bf43ae0f5ac098ba1b76889caa91",
+          "md5": "254e4f11b88d42b770109e6ac97c4b64"
         }
       ]
     }

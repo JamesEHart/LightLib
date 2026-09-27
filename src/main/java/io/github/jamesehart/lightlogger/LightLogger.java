@@ -1,7 +1,12 @@
 package io.github.jamesehart.lightlogger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -9,9 +14,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StringEntry;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -37,15 +45,26 @@ public final class LightLogger {
     private static final Map<String, StructPublisher<Rotation2d>> rotation2dStructPubs = new HashMap<>();
     private static final Map<String, StructPublisher<Rotation3d>> rotation3dStructPubs = new HashMap<>();
 
+    private static final Map<String, DoubleEntry> tunableNumberEntries = new HashMap<>();
+    private static final Map<String, BooleanEntry> tunableBoolEntries = new HashMap<>();
+    private static final Map<String, StringEntry> tunableStringEntries = new HashMap<>();
+    private static final List<Tunable<?>> tunableCallbacks = new ArrayList<>();
+
     private static boolean started = false;
 
     private static double frameStartTime = 0.0;
 
     private LightLogger() {}
 
-    /** Records the start time of the current loop frame. Call at the top of robotPeriodic(). */
+    /**
+     * Records the start time of the current loop frame and runs the callbacks of any tunable values
+     * that changed. Call at the top of robotPeriodic().
+     */
     public static void startFrame() {
         frameStartTime = Timer.getFPGATimestamp();
+        for (Tunable<?> tunable : tunableCallbacks) {
+            tunable.poll();
+        }
     }
 
     /** Flushes pending NetworkTables updates. Call at the bottom of robotPeriodic(). */
@@ -123,6 +142,129 @@ public final class LightLogger {
     /** Logs a frame-timestamped message to {@code /LightLogger/Errors}. */
     public static void error(String message) {
         logString("Errors", frameTimestamped(message));
+    }
+
+    private static final class Tunable<T> {
+        private final Supplier<T> getter;
+        private final Consumer<T> onChange;
+        private T last;
+
+        Tunable(Supplier<T> getter, Consumer<T> onChange) {
+            this.getter = getter;
+            this.onChange = onChange;
+            this.last = getter.get();
+            onChange.accept(last);
+        }
+
+        void poll() {
+            T value = getter.get();
+            if (!Objects.equals(value, last)) {
+                last = value;
+                onChange.accept(value);
+            }
+        }
+    }
+
+    private static DoubleEntry getTunableNumberEntry(String key, double defaultValue) {
+        return tunableNumberEntries.computeIfAbsent(key, k -> {
+            DoubleEntry entry = inst.getDoubleTopic(PREFIX + k).getEntry(defaultValue);
+            entry.setDefault(defaultValue);
+            return entry;
+        });
+    }
+
+    private static BooleanEntry getTunableBooleanEntry(String key, boolean defaultValue) {
+        return tunableBoolEntries.computeIfAbsent(key, k -> {
+            BooleanEntry entry = inst.getBooleanTopic(PREFIX + k).getEntry(defaultValue);
+            entry.setDefault(defaultValue);
+            return entry;
+        });
+    }
+
+    private static StringEntry getTunableStringEntry(String key, String defaultValue) {
+        return tunableStringEntries.computeIfAbsent(key, k -> {
+            StringEntry entry = inst.getStringTopic(PREFIX + k).getEntry(defaultValue);
+            entry.setDefault(defaultValue);
+            return entry;
+        });
+    }
+
+    /**
+     * Returns a number that can be edited live from a dashboard (Glass, AdvantageScope, Elastic) at
+     * {@code /LightLogger/<key>}. Call every loop to pick up edits. Don't also use {@link
+     * #logNumber} with the same key, or it will overwrite the edits.
+     *
+     * @param key the topic name under /LightLogger/
+     * @param defaultValue the value used until someone edits it
+     * @return the current value
+     */
+    public static double tunableNumber(String key, double defaultValue) {
+        return getTunableNumberEntry(key, defaultValue).get(defaultValue);
+    }
+
+    /**
+     * Returns a boolean that can be edited live from a dashboard at {@code /LightLogger/<key>}. Call
+     * every loop to pick up edits.
+     *
+     * @param key the topic name under /LightLogger/
+     * @param defaultValue the value used until someone edits it
+     * @return the current value
+     */
+    public static boolean tunableBoolean(String key, boolean defaultValue) {
+        return getTunableBooleanEntry(key, defaultValue).get(defaultValue);
+    }
+
+    /**
+     * Returns a string that can be edited live from a dashboard at {@code /LightLogger/<key>}. Call
+     * every loop to pick up edits.
+     *
+     * @param key the topic name under /LightLogger/
+     * @param defaultValue the value used until someone edits it
+     * @return the current value
+     */
+    public static String tunableString(String key, String defaultValue) {
+        return getTunableStringEntry(key, defaultValue).get(defaultValue);
+    }
+
+    /**
+     * Registers a number that can be edited live from a dashboard at {@code /LightLogger/<key>}.
+     * {@code onChange} runs immediately with the starting value, then again whenever the value is
+     * edited. Call once (e.g. in a constructor); changes are checked in {@link #startFrame()}, which
+     * must be called every loop.
+     *
+     * @param key the topic name under /LightLogger/
+     * @param defaultValue the value used until someone edits it
+     * @param onChange called with the new value, e.g. {@code pid::setP}
+     */
+    public static void tunableNumber(String key, double defaultValue, Consumer<Double> onChange) {
+        DoubleEntry entry = getTunableNumberEntry(key, defaultValue);
+        tunableCallbacks.add(new Tunable<>(() -> entry.get(defaultValue), onChange));
+    }
+
+    /**
+     * Registers a boolean that can be edited live from a dashboard at {@code /LightLogger/<key>}.
+     * See {@link #tunableNumber(String, double, Consumer)}.
+     *
+     * @param key the topic name under /LightLogger/
+     * @param defaultValue the value used until someone edits it
+     * @param onChange called with the new value
+     */
+    public static void tunableBoolean(String key, boolean defaultValue, Consumer<Boolean> onChange) {
+        BooleanEntry entry = getTunableBooleanEntry(key, defaultValue);
+        tunableCallbacks.add(new Tunable<>(() -> entry.get(defaultValue), onChange));
+    }
+
+    /**
+     * Registers a string that can be edited live from a dashboard at {@code /LightLogger/<key>}.
+     * See {@link #tunableNumber(String, double, Consumer)}.
+     *
+     * @param key the topic name under /LightLogger/
+     * @param defaultValue the value used until someone edits it
+     * @param onChange called with the new value
+     */
+    public static void tunableString(String key, String defaultValue, Consumer<String> onChange) {
+        StringEntry entry = getTunableStringEntry(key, defaultValue);
+        tunableCallbacks.add(new Tunable<>(() -> entry.get(defaultValue), onChange));
     }
 
     private static StructPublisher<Pose2d> getPose2dStructPublisher(String key) {
