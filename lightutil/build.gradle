@@ -1,0 +1,32 @@
+// Bump this (and the versions in LightUtil.json) for every release.
+group = 'io.github.jamesehart.lightutil'
+version = '2026.1.0'
+
+dependencies {
+    // Command-based and the AprilTag field layouts. Every robot project already has these.
+    compileOnly "edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:$wpilibVersion"
+    compileOnly "edu.wpi.first.apriltag:apriltag-java:$wpilibVersion"
+    compileOnly "edu.wpi.first.hal:hal-java:$wpilibVersion"
+
+    // The math packages are pure Java, so they're testable without WPILib's native libraries.
+    testImplementation "edu.wpi.first.wpimath:wpimath-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.wpiutil:wpiutil-java:$wpilibVersion"
+    testImplementation "edu.wpi.first.wpiunits:wpiunits-java:$wpilibVersion"
+    testImplementation 'org.ejml:ejml-simple:0.44.0'
+    testImplementation 'us.hebi.quickbuf:quickbuf-runtime:1.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'lightutil-java'
+            from components.java
+        }
+    }
+}

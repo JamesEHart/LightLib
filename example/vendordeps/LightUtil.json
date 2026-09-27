@@ -1,0 +1,20 @@
+{
+  "fileName": "LightUtil.json",
+  "name": "LightUtil",
+  "version": "2026.1.0",
+  "frcYear": "2026",
+  "uuid": "ac40c033-bf8f-4c6c-aa17-ff84f100cc23",
+  "mavenUrls": [
+    "https://raw.githubusercontent.com/JamesEHart/LightLib/main/repos"
+  ],
+  "jsonUrl": "https://raw.githubusercontent.com/JamesEHart/LightLib/main/LightUtil.json",
+  "javaDependencies": [
+    {
+      "groupId": "io.github.jamesehart.lightutil",
+      "artifactId": "lightutil-java",
+      "version": "2026.1.0"
+    }
+  ],
+  "jniDependencies": [],
+  "cppDependencies": []
+}

@@ -1,6 +1,6 @@
 import org.gradle.internal.os.OperatingSystem
 
-// Shared setup for every LightLib library (lightlogger, lightsim).
+// Shared setup for every LightLib library (lightlogger, lightsim, lightutil).
 // Bump a library's version in its own build.gradle, and in its vendordep JSON, for every release.
 
 ext.wpilibVersion = '2026.2.1'

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.Optional;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -19,12 +21,19 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import io.github.jamesehart.lightlogger.LightLogger;
 import io.github.jamesehart.lightsim.LightSim;
 import io.github.jamesehart.lightsim.motors.SimPigeon2;
 import io.github.jamesehart.lightsim.motors.SimSparkMax;
 import io.github.jamesehart.lightsim.motors.SimTalonFX;
 import io.github.jamesehart.lightsim.physics.SwerveSimConfig;
+import io.github.jamesehart.lightutil.auto.AutoStartChecker;
+import io.github.jamesehart.lightutil.drive.DriveInput;
+import io.github.jamesehart.lightutil.diagnostics.HealthMonitor;
+import io.github.jamesehart.lightutil.robot.MatchTimer;
+import io.github.jamesehart.lightutil.targeting.AimSolver;
+import io.github.jamesehart.lightutil.targeting.Target;
 
 public class Robot extends TimedRobot {
     private static final double DRIVE_GEARING = 6.75;
@@ -52,6 +61,16 @@ public class Robot extends TimedRobot {
     private final SimTalonFX elevator = new SimTalonFX(15);
 
     private final XboxController controller = new XboxController(0);
+    // Left stick drives, right stick X turns, left bumper for slow mode.
+    private final DriveInput driveInput = new DriveInput(
+                    () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX())
+            .maxSpeed(MAX_SPEED)
+            .maxTurnRate(MAX_TURN)
+            .slowMode(controller::getLeftBumperButton, 0.4);
+    // A made-up target, given for the blue alliance (it flips automatically on red).
+    private final Target goal = Target.of("Goal", new Translation3d(4.6, 4.0, 1.8));
+    private final Pose2d autoStart = new Pose2d(2, 4, Rotation2d.kZero);
+    private Pose2d pose = autoStart;
     private final VoltageOut driveRequest = new VoltageOut(0);
     private final PositionVoltage steerRequest = new PositionVoltage(0);
     private final PositionVoltage elevatorRequest = new PositionVoltage(0);
@@ -83,8 +102,17 @@ public class Robot extends TimedRobot {
             swerveSim.module(drives[i], steers[i], locations[i]);
         }
         LightSim.swerve(swerveSim);
-        Pose2d start = new Pose2d(2, 4, Rotation2d.kZero);
+        Pose2d start = autoStart;
         LightSim.setRobotPose(start);
+
+        // Hold the right bumper to face the goal while driving (aim assist).
+        driveInput.headingOverride(() -> controller.getRightBumperButton()
+                ? Optional.of(AimSolver.fieldAngle(pose, goal.get2d()))
+                : Optional.empty());
+        // Problems show up as alerts on the dashboard (these run from CommandScheduler.run()).
+        HealthMonitor.connected("Pigeon", pigeon::isConnected);
+        HealthMonitor.lowBattery(12.3);
+        new AutoStartChecker(() -> pose, () -> Optional.of(autoStart));
         odometry = new SwerveDriveOdometry(kinematics, pigeon.getRotation2d(), getModulePositions(), start);
 
         // A flywheel on a NEO, and an elevator shown as component 0 of an AdvantageScope robot model.
@@ -123,7 +151,12 @@ public class Robot extends TimedRobot {
         LightLogger.logNumber("SpeedTimesKP", speed * pid.getP());
 
         // Compare the robot's own odometry with LightSim's true pose (/LightSim/RobotPose).
-        LightLogger.logPose2d("Odometry", odometry.update(pigeon.getRotation2d(), getModulePositions()));
+        CommandScheduler.getInstance().run();
+        pose = odometry.update(pigeon.getRotation2d(), getModulePositions());
+        LightLogger.logPose2d("Odometry", pose);
+        LightLogger.logNumber("Goal/Distance", AimSolver.distance(pose, goal.get2d()));
+        LightLogger.logNumber("Goal/AngleDeg", AimSolver.robotRelativeAngle(pose, goal.get2d()).getDegrees());
+        LightLogger.logNumber("MatchTimeLeft", MatchTimer.timeLeft());
         LightLogger.logNumber("Flywheel/RPM", flywheel.getEncoder().getVelocity());
         LightLogger.logNumber("Elevator/HeightM", elevator.getPosition().getValueAsDouble());
         LightLogger.endFrame();
@@ -131,12 +164,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        // Field-relative swerve: left stick drives, right stick X turns.
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                -controller.getLeftY() * MAX_SPEED,
-                -controller.getLeftX() * MAX_SPEED,
-                -controller.getRightX() * MAX_TURN,
-                pigeon.getRotation2d());
+        // Field-relative swerve, with deadband, squared response and slow mode from LightUtil.
+        ChassisSpeeds speeds = driveInput.fieldRelative(pigeon.getRotation2d());
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_SPEED);
         for (int i = 0; i < 4; i++) {

@@ -26,12 +26,13 @@ pluginManagement {
     }
 }
 
-// Build LightLogger and LightSim from the parent folder instead of downloading the published
+// Build LightLogger, LightSim and LightUtil from the parent folder instead of downloading the published
 // versions named in vendordeps/, so local changes are testable.
 includeBuild('..') {
     dependencySubstitution {
         substitute module('io.github.jamesehart.lightlogger:lightlogger-java') using project(':lightlogger')
         substitute module('io.github.jamesehart.lightsim:lightsim-java') using project(':lightsim')
+        substitute module('io.github.jamesehart.lightutil:lightutil-java') using project(':lightutil')
     }
 }
 

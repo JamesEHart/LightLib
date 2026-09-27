@@ -1,0 +1,100 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.jamesehart.lightutil",
+    "module": "lightutil-java",
+    "version": "2026.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.11"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "lightutil-java-2026.1.0.jar",
+          "url": "lightutil-java-2026.1.0.jar",
+          "size": 70902,
+          "sha512": "ac24bedc1975db929619d898e083335b2628146a9613d983e29ec0d1c1c807c7c3465b02c0a8b003452b2a8e8a7e0a4c2c1cb20f05774add3aab9d9bbf3a3884",
+          "sha256": "78e3cc244de4d07fc5cac6eab1a997b091a23cbc9b9c061ec7f6b08d59af6606",
+          "sha1": "fb789110949f4137200678e6506f63c697a9c7da",
+          "md5": "28fb1a036c87dea745cadeb2afd99a3e"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "lightutil-java-2026.1.0.jar",
+          "url": "lightutil-java-2026.1.0.jar",
+          "size": 70902,
+          "sha512": "ac24bedc1975db929619d898e083335b2628146a9613d983e29ec0d1c1c807c7c3465b02c0a8b003452b2a8e8a7e0a4c2c1cb20f05774add3aab9d9bbf3a3884",
+          "sha256": "78e3cc244de4d07fc5cac6eab1a997b091a23cbc9b9c061ec7f6b08d59af6606",
+          "sha1": "fb789110949f4137200678e6506f63c697a9c7da",
+          "md5": "28fb1a036c87dea745cadeb2afd99a3e"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "lightutil-java-2026.1.0-sources.jar",
+          "url": "lightutil-java-2026.1.0-sources.jar",
+          "size": 47541,
+          "sha512": "49ace0f41113a0d1b1c464bcdebd5aef135385f35b1909e1d79d634e3a9b8da8f86b0307415732c6cdd5907bae3e1875e42a16e7ca4767776bf5d56da4e766cc",
+          "sha256": "db60c57b601babe5b58524b93a85669980e81d01cb9b73a0ff57c92f07637a54",
+          "sha1": "3e2151df20dbd7a05cae95574b0f534c5f0e517f",
+          "md5": "d79a656267acaee47f4e17ceb4661241"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "lightutil-java-2026.1.0-javadoc.jar",
+          "url": "lightutil-java-2026.1.0-javadoc.jar",
+          "size": 254105,
+          "sha512": "59eb0e75077709240203c1980af4905ec03ca9f7ed4cbb401b72ac96303f256a18fb97a903b1c33f511e336069580bdbd217ccf6feb2259177cd2e0a34797061",
+          "sha256": "68385f6d1af295908fb7f34404375ed14f1637fb50380a73d930ba90cdd7cda1",
+          "sha1": "0482f42f11b74eda940a242341bf6691c1b39744",
+          "md5": "fc93cf3eba54621934f5296e87369a5d"
+        }
+      ]
+    }
+  ]
+}
