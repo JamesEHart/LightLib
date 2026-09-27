@@ -1,4 +1,4 @@
-package frc.util;
+package io.github.jamesehart.lightlogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,9 +17,13 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.Timer;
 
-public class BreadLog {
+/**
+ * Lightweight logger that publishes values to NetworkTables under {@code /LightLogger/}, and
+ * optionally records them to a WPILib data log file.
+ */
+public final class LightLogger {
 
-    private static final String PREFIX = "/BreadLog/";
+    private static final String PREFIX = "/LightLogger/";
     private static final NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
     private static final Map<String, DoublePublisher> numberPubs = new HashMap<>();
@@ -37,14 +41,19 @@ public class BreadLog {
 
     private static double frameStartTime = 0.0;
 
+    private LightLogger() {}
+
+    /** Records the start time of the current loop frame. Call at the top of robotPeriodic(). */
     public static void startFrame() {
         frameStartTime = Timer.getFPGATimestamp();
     }
 
+    /** Flushes pending NetworkTables updates. Call at the bottom of robotPeriodic(). */
     public static void endFrame() {
         inst.flush();
     }
 
+    /** Returns the seconds elapsed since {@link #startFrame()} was called. */
     public static double getFrameTime() {
         return Timer.getFPGATimestamp() - frameStartTime;
     }
@@ -54,58 +63,64 @@ public class BreadLog {
         return "[" + us + "] " + msg;
     }
 
+    /**
+     * Starts the logger.
+     *
+     * @param recordToFile if true, also records all NetworkTables data to a .wpilog file (a USB
+     *     stick if one is attached, otherwise /home/lvuser/logs, or ./logs in simulation)
+     */
     public static void start(boolean recordToFile) {
         if (started) return;
         started = true;
 
-        inst.startServer();
-
         if (recordToFile) {
-            try {
-                java.nio.file.Files.createDirectories(java.nio.file.Paths.get("logs"));
-            } catch (Exception e) {
-                System.out.println("BreadLog: Failed to create log folder!");
-            }
-            DataLogManager.start("logs/");
+            DataLogManager.start();
             DataLogManager.logNetworkTables(true);
         }
 
-        logEvent("BreadLogStarted");
+        logEvent("LightLoggerStarted");
     }
 
+    /** Logs a stop event and flushes pending NetworkTables updates. */
     public static void stop() {
         if (!started) return;
-        logEvent("BreadLogStopped");
+        logEvent("LightLoggerStopped");
         inst.flush();
         started = false;
     }
 
+    /** Logs a numeric value to {@code /LightLogger/<key>}. */
     public static void logNumber(String key, double value) {
         DoublePublisher pub = numberPubs.computeIfAbsent(key,
                 k -> inst.getDoubleTopic(PREFIX + k).publish());
         pub.set(value);
     }
 
+    /** Logs a boolean value to {@code /LightLogger/<key>}. */
     public static void logBoolean(String key, boolean value) {
         BooleanPublisher pub = boolPubs.computeIfAbsent(key,
                 k -> inst.getBooleanTopic(PREFIX + k).publish());
         pub.set(value);
     }
 
+    /** Logs a string value to {@code /LightLogger/<key>}. */
     public static void logString(String key, String value) {
         StringPublisher pub = stringPubs.computeIfAbsent(key,
                 k -> inst.getStringTopic(PREFIX + k).publish());
         pub.set(value);
     }
 
+    /** Logs a frame-timestamped message to {@code /LightLogger/Events}. */
     public static void logEvent(String message) {
         logString("Events", frameTimestamped(message));
     }
 
+    /** Logs a frame-timestamped message to {@code /LightLogger/Warnings}. */
     public static void warn(String message) {
         logString("Warnings", frameTimestamped(message));
     }
 
+    /** Logs a frame-timestamped message to {@code /LightLogger/Errors}. */
     public static void error(String message) {
         logString("Errors", frameTimestamped(message));
     }
@@ -140,26 +155,32 @@ public class BreadLog {
                 k -> inst.getStructTopic(PREFIX + k, Rotation3d.struct).publish());
     }
 
+    /** Logs a {@link Pose2d} as a struct to {@code /LightLogger/<key>}. */
     public static void logPose2d(String key, Pose2d pose) {
         getPose2dStructPublisher(key).set(pose);
     }
 
+    /** Logs a {@link Pose3d} as a struct to {@code /LightLogger/<key>}. */
     public static void logPose3d(String key, Pose3d pose) {
         getPose3dStructPublisher(key).set(pose);
     }
 
+    /** Logs a {@link Translation2d} as a struct to {@code /LightLogger/<key>}. */
     public static void logTranslation2d(String key, Translation2d t) {
         getTranslation2dStructPublisher(key).set(t);
     }
 
+    /** Logs a {@link Translation3d} as a struct to {@code /LightLogger/<key>}. */
     public static void logTranslation3d(String key, Translation3d t) {
         getTranslation3dStructPublisher(key).set(t);
     }
 
+    /** Logs a {@link Rotation2d} as a struct to {@code /LightLogger/<key>}. */
     public static void logRotation2d(String key, Rotation2d r) {
         getRotation2dStructPublisher(key).set(r);
     }
 
+    /** Logs a {@link Rotation3d} as a struct to {@code /LightLogger/<key>}. */
     public static void logRotation3d(String key, Rotation3d r) {
         getRotation3dStructPublisher(key).set(r);
     }

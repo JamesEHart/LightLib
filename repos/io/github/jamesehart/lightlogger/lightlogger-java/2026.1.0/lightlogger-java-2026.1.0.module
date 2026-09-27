@@ -1,0 +1,100 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.github.jamesehart.lightlogger",
+    "module": "lightlogger-java",
+    "version": "2026.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.11"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "lightlogger-java-2026.1.0.jar",
+          "url": "lightlogger-java-2026.1.0.jar",
+          "size": 4103,
+          "sha512": "354d3093a58f304ce9ea607aa344b5c87cc38fa0eae8b1536818c80c5f9f92927e7f6359269e229386698362bcba5081fdc7f018b36dd6d429a3c177871b6329",
+          "sha256": "6891e76150ae346f8e43b1bd4e9d580daa5f3b03c2cc7f3f18f376587dd5fbaa",
+          "sha1": "4cba7014bfd0672cd56674c391d23990637ab227",
+          "md5": "b3b78efa83091b2d2423234caea9f8c3"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "lightlogger-java-2026.1.0.jar",
+          "url": "lightlogger-java-2026.1.0.jar",
+          "size": 4103,
+          "sha512": "354d3093a58f304ce9ea607aa344b5c87cc38fa0eae8b1536818c80c5f9f92927e7f6359269e229386698362bcba5081fdc7f018b36dd6d429a3c177871b6329",
+          "sha256": "6891e76150ae346f8e43b1bd4e9d580daa5f3b03c2cc7f3f18f376587dd5fbaa",
+          "sha1": "4cba7014bfd0672cd56674c391d23990637ab227",
+          "md5": "b3b78efa83091b2d2423234caea9f8c3"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "lightlogger-java-2026.1.0-sources.jar",
+          "url": "lightlogger-java-2026.1.0-sources.jar",
+          "size": 2650,
+          "sha512": "8073662ef19fecdbcc53ead40deed1ea60df4418ec41110e639747389b0552b1b5765e9700c5accc9eb4aae4626fe1687b30722ef2138e125b6519c377bfc9bc",
+          "sha256": "093f8d8e821a991a8756fe8f1d59ba6a115dc343620c85b9ddc949c3cc86ee5b",
+          "sha1": "82b6a11f21d324386e7c293d8559a2eaaf792aca",
+          "md5": "f5d55d0eb90d82acdcaf4f647b366fce"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "lightlogger-java-2026.1.0-javadoc.jar",
+          "url": "lightlogger-java-2026.1.0-javadoc.jar",
+          "size": 73931,
+          "sha512": "0efbd28410e29480f07e8312f1498a42600f7a17f47353c0e4ac332f0e4982d3a7586ae425280eb0043366b02498206eb6ba1f579dbf1b25b9bf724b64fbcd5e",
+          "sha256": "23546d50aa5f85f4526304e154242e373bc5a21b4d428963f58fa79a14a9d762",
+          "sha1": "5ae49d94071d356122e0230a0c366094245c84cf",
+          "md5": "0152e3197815646e997f83318b35627f"
+        }
+      ]
+    }
+  ]
+}

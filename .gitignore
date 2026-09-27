@@ -137,13 +137,16 @@ $RECYCLE.BIN/
 
 ### Gradle ###
 .gradle
-/build/
+build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
+
+# The published maven repo that vendordep users download from
+!repos/**/*.jar
 
 # Cache of project
 .gradletasknamecache

@@ -1,9 +1,7 @@
-# BreadLog  
-A logging framework made by [Finn](https://github.com/JamesEHart) for Team 5940 BREAD
+# LightLogger
+A logging library made by [Finn](https://github.com/JamesEHart) for FRC
 
-BreadLog is a lightweight logging library designed for FRC teams. It provides a simple way to record robot states, sensor data, subsystem values, and poses during both real and simulation operations.
-
-BreadLog was originally built for 5940, but is designed to be general enough for any team to integrate and modify.
+LightLogger is a lightweight logging library designed for FRC teams. It provides a simple way to record robot states, sensor data, subsystem values, and poses during both real and simulation operations.
 
 ---
 
@@ -12,32 +10,40 @@ BreadLog was originally built for 5940, but is designed to be general enough for
 - High-speed logging via NetworkTables
 - Log numbers, booleans, strings, events, warnings, errors, and geometry types
 - Simple setup with one line in `Robot.java`
-- Optional file logging with automatic log folder creation
+- Optional file logging to `.wpilog` files
 - Frame timing utilities for loop performance tracking
-- Compatible with NetworkTables dashboards (Glass, AdvantageScope, etc.)
+- Compatible with NetworkTables dashboards (Glass, AdvantageScope, Elastic, etc.)
 
 ---
 
 ## Quick Start
 
 ### Installation
-Place `BreadLog.java` under `src/main/java/frc/util/`
+LightLogger is a WPILib vendor library for the **2026** season (Java only).
+
+1. In VS Code, open the command palette (`Ctrl+Shift+P`) and run **WPILib: Manage Vendor Libraries**.
+2. Choose **Install new library (online)**.
+3. Paste this URL:
+   ```
+   https://raw.githubusercontent.com/JamesEHart/LightLogger/main/LightLogger.json
+   ```
+4. Build your project so Gradle downloads it.
 
 ### Import
 ```java
-import frc.util.BreadLog;
+import io.github.jamesehart.lightlogger.LightLogger;
 ```
 
-### Setup in `robotInit()`
+### Setup in your `Robot` constructor
 ```java
-BreadLog.start(true);  // true = save logs to file, false = NetworkTables only
+LightLogger.start(true);  // true = also save logs to a file, false = NetworkTables only
 ```
 
 ### Frame timing (optional, in `robotPeriodic()`)
 ```java
-BreadLog.startFrame();
+LightLogger.startFrame();
 // ... your periodic code ...
-BreadLog.endFrame();
+LightLogger.endFrame();
 ```
 
 ---
@@ -48,29 +54,31 @@ BreadLog.endFrame();
 
 | Method | Description |
 |---|---|
-| `BreadLog.start(boolean recordToFile)` | Starts the logger. Pass `true` to save logs to the `logs/` folder, `false` for NetworkTables only. |
-| `BreadLog.stop()` | Flushes and stops the logger. |
-| `BreadLog.startFrame()` | Records the start time of the current loop frame. |
-| `BreadLog.endFrame()` | Flushes all pending NetworkTables updates. |
-| `BreadLog.getFrameTime()` | Returns elapsed time in seconds since `startFrame()` was called. |
+| `LightLogger.start(boolean recordToFile)` | Starts the logger. Pass `true` to also record everything to a `.wpilog` file, `false` for NetworkTables only. |
+| `LightLogger.stop()` | Flushes and stops the logger. |
+| `LightLogger.startFrame()` | Records the start time of the current loop frame. |
+| `LightLogger.endFrame()` | Flushes all pending NetworkTables updates. |
+| `LightLogger.getFrameTime()` | Returns elapsed time in seconds since `startFrame()` was called. |
+
+Log files are written using WPILib's `DataLogManager`, to a USB stick if one is plugged into the roboRIO, otherwise `/home/lvuser/logs`. In simulation they go to `logs/` in your project folder. Open them with AdvantageScope.
 
 ---
 
 ### Logging Primitives
 
-All values are published to NetworkTables under the `/BreadLog/<key>` topic.
+All values are published to NetworkTables under the `/LightLogger/<key>` topic.
 
 | Method | Description |
 |---|---|
-| `BreadLog.logNumber(String key, double value)` | Log a numeric value (doubles, ints, etc.). |
-| `BreadLog.logBoolean(String key, boolean value)` | Log a boolean value. |
-| `BreadLog.logString(String key, String value)` | Log a string value. |
+| `LightLogger.logNumber(String key, double value)` | Log a numeric value (doubles, ints, etc.). |
+| `LightLogger.logBoolean(String key, boolean value)` | Log a boolean value. |
+| `LightLogger.logString(String key, String value)` | Log a string value. |
 
 **Example:**
 ```java
-BreadLog.logNumber("Drive/LeftSpeed", leftMotor.get());
-BreadLog.logBoolean("Intake/HasNote", intakeSensor.get());
-BreadLog.logString("Robot/State", currentState.name());
+LightLogger.logNumber("Drive/LeftSpeed", leftMotor.get());
+LightLogger.logBoolean("Intake/HasNote", intakeSensor.get());
+LightLogger.logString("Robot/State", currentState.name());
 ```
 
 ---
@@ -81,15 +89,15 @@ These log timestamped messages (relative to the current frame) to fixed keys.
 
 | Method | Published to | Description |
 |---|---|---|
-| `BreadLog.logEvent(String message)` | `/BreadLog/Events` | Log a general event. |
-| `BreadLog.warn(String message)` | `/BreadLog/Warnings` | Log a warning. |
-| `BreadLog.error(String message)` | `/BreadLog/Errors` | Log an error. |
+| `LightLogger.logEvent(String message)` | `/LightLogger/Events` | Log a general event. |
+| `LightLogger.warn(String message)` | `/LightLogger/Warnings` | Log a warning. |
+| `LightLogger.error(String message)` | `/LightLogger/Errors` | Log an error. |
 
 **Example:**
 ```java
-BreadLog.logEvent("AutoStarted");
-BreadLog.warn("Vision target lost");
-BreadLog.error("Motor controller disconnected");
+LightLogger.logEvent("AutoStarted");
+LightLogger.warn("Vision target lost");
+LightLogger.error("Motor controller disconnected");
 ```
 
 ---
@@ -100,15 +108,45 @@ Geometry types are published as WPILib structs, making them compatible with Adva
 
 | Method | Type |
 |---|---|
-| `BreadLog.logPose2d(String key, Pose2d pose)` | `Pose2d` |
-| `BreadLog.logPose3d(String key, Pose3d pose)` | `Pose3d` |
-| `BreadLog.logTranslation2d(String key, Translation2d t)` | `Translation2d` |
-| `BreadLog.logTranslation3d(String key, Translation3d t)` | `Translation3d` |
-| `BreadLog.logRotation2d(String key, Rotation2d r)` | `Rotation2d` |
-| `BreadLog.logRotation3d(String key, Rotation3d r)` | `Rotation3d` |
+| `LightLogger.logPose2d(String key, Pose2d pose)` | `Pose2d` |
+| `LightLogger.logPose3d(String key, Pose3d pose)` | `Pose3d` |
+| `LightLogger.logTranslation2d(String key, Translation2d t)` | `Translation2d` |
+| `LightLogger.logTranslation3d(String key, Translation3d t)` | `Translation3d` |
+| `LightLogger.logRotation2d(String key, Rotation2d r)` | `Rotation2d` |
+| `LightLogger.logRotation3d(String key, Rotation3d r)` | `Rotation3d` |
 
 **Example:**
 ```java
-BreadLog.logPose2d("Drive/EstimatedPose", poseEstimator.getEstimatedPosition());
-BreadLog.logRotation2d("Drive/Heading", gyro.getRotation2d());
+LightLogger.logPose2d("Drive/EstimatedPose", poseEstimator.getEstimatedPosition());
+LightLogger.logRotation2d("Drive/Heading", gyro.getRotation2d());
 ```
+
+---
+
+## Development
+
+### Repo layout
+
+| Path | What it is |
+|---|---|
+| `src/main/java/` | The library itself. |
+| `example/` | A robot project that uses LightLogger. It builds the library from this repo, so it's the place to test changes in simulation before releasing. |
+| `LightLogger.json` | The vendordep file teams install. |
+| `repos/` | The published Maven repository. GitHub serves it to GradleRIO. Generated by Gradle; don't edit by hand. |
+
+### Testing locally
+Open the `example/` folder in WPILib VS Code and run **Simulate Robot Code**.
+
+### Releasing a new version
+1. Bump `version` in `build.gradle`.
+2. Bump both `version` fields in `LightLogger.json`, and copy the file to `example/vendordeps/`.
+3. Run `./gradlew publish` from the repo root. The new version appears in `repos/`.
+4. Commit and push to `main`. Teams get the update with **WPILib: Manage Vendor Libraries → Check for updates (online)**.
+
+Use the WPILib JDK when running Gradle from a terminal (VS Code's WPILib terminal already does this):
+```
+JAVA_HOME=C:\Users\Public\wpilib\2026\jdk
+```
+
+### New season
+Update `wpilibVersion` and the `wpilib/2026` path in `build.gradle`, and `frcYear` in `LightLogger.json`. Update the example project with the WPILib importer. Then release as above. GradleRIO refuses vendordeps whose `frcYear` doesn't match the project's year.
